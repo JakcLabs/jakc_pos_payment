@@ -1,0 +1,39 @@
+.pos .paymentline .credit-button{
+    cursor: pointer;
+    text-align: center;
+}
+
+.pos .paymentline .credit-button .creditnumber{
+	font-size: 8px;
+}
+
+.pos .paymentline .debit-button{
+    cursor: pointer;
+    text-align: center;
+}
+
+.pos .paymentline .debit-button .debitnumber{
+	font-size: 8px;
+}
+
+
+.pos .paymentline .coupon-button{
+    cursor: pointer;
+    text-align: center;
+}
+
+.pos .paymentline .coupon-button .couponnumber{
+	font-size: 8px;
+}
+
+.pos .paymentline .deposit-button{
+    cursor: pointer;
+    text-align: center;
+}
+
+.pos .paymentline .deposit-button .depositnumber{
+	font-size: 8px;
+}
+
+
+

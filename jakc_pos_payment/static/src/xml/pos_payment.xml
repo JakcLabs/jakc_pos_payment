@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="DepositPaymentScreenWidget">
+        <div class="depositpayment-screen screen">
+            <div class="depositpayment-content">
+                <div class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1>Topup Transaction</h1>
+                    <span class='button next'>
+                        Confirm
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </div>
+                <div class="jakc-centered-content">
+                    <div class="nfcid">
+                        <input class='nfcid'  placeholder="Card ID" disabled="disabled"></input>
+                    </div>
+                    <div class="nfcname">
+                        <input class='nfcname' placeholder="Name"></input>
+                    </div>
+                    <div class="nfcbalance">
+                        <input class='nfcbalance' placeholder="Balance" disabled="disabled"></input>
+                    </div>
+                    <div class='check-card'>
+                        <i class='fa fa-angle-double-right'></i>
+                        Read Card
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+	<t t-name="PaymentCreditPopupWidget">
+	    <div class="modal-dialog">
+	      <div class="popup popup-textinput">
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <input type='text' id="cardnumber" t-att-value="widget.options.cardnumber || ''"></input>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+	    </div>
+    </t>
+  
+ 	<t t-name="PaymentDebitPopupWidget">
+	    <div class="modal-dialog">
+	      <div class="popup">
+	        <p class="title">Debit Payment</p>
+	        <p class="body"></p>
+	        <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+           	</div>
+	      </div>
+	    </div>
+    </t>
+    
+    <t t-name="PaymentDebitCouponWidget">
+	    <div class="modal-dialog">
+	      <div class="popup">
+	        <p class="title">Debit Payment</p>
+	        <p class="body"></p>
+	        <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+          	</div>
+	      </div>
+	    </div>
+    </t>
+    
+    <t t-name="PaymentDepositPopupWidget">
+	    <div class="modal-dialog">
+	      <div class="popup">
+	        <p class="title">Deposit Payment</p>
+	        <p class="body"></p>
+	        <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+           	</div>
+	      </div>
+	    </div>
+    </t>
+    
+    <t t-extend="PaymentScreen-Paymentlines">
+   		<t t-jquery = ".paymentlines" t-operation="replace">
+            <table class='paymentlines'>
+                <colgroup>
+                    <col class='due' />
+                    <col class='tendered' />
+                    <col class='change' />
+                    <col class='method' />
+		    		<col class='controls' />
+                    <col class='controls' />
+                </colgroup>
+                <thead>
+                    <tr class='label'>
+                        <th>Due</th>
+                        <th>Tendered</th>
+                        <th>Change</th>
+                        <th>Method</th>
+						<th></th>	
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach='paymentlines' t-as='line'>
+                        <t t-if='line.selected'>
+                            <tr class='paymentline selected'>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                                <td class='col-tendered edit'> 
+                                    <t t-esc='widget.inputbuffer' />
+                                    <!-- <t t-esc='line.get_amount()' /> -->
+                                </td>
+                                <t t-if='order.get_change(line)'>
+                                    <td class='col-change highlight' > 
+                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                    </td>
+                                </t>
+                                <t t-if='!order.get_change(line)'>
+                                    <td class='col-change' ></td>
+                                </t>
+                                    
+                                <td class='col-name' > <t t-esc='line.name' /> </td>
+                                
+                                <t t-if="line.cashregister.journal.payment_type == 'cash'">
+                               		<td></td>
+								</t>
+								
+								<t t-if="line.cashregister.journal.payment_type == 'credit'">
+                               		<td class='credit-button' t-att-data-cid='line.cid'> <i class='fa fa-credit-card' /><p class='cardnumber'><t t-esc='line.cardnumber'/></p></td>
+								</t>
+								
+								<t t-if="line.cashregister.journal.payment_type == 'debit'">
+                               		<td class='debit-button' t-att-data-cid='line.cid'> <i class='fa fa-credit-card-alt' /><p class='debitnumber'><t t-esc='line.debitnumber'/></p></td>
+								</t>
+								
+								<t t-if="line.cashregister.journal.payment_type == 'coupon'">
+                               		<td class='coupon-button' t-att-data-cid='line.cid'> <i class='fa fa-tags' /><p class='couponnumber'><t t-esc='line.couponnumber'/></p></td>
+								</t>
+									
+								<t t-if="line.cashregister.journal.payment_type == 'deposit'">
+                               		<td class='deposit-button' t-att-data-cid='line.cid'> <i class='fa fa-bank' /><p class='depositnumber'><t t-esc='line.depositnumber'/></p></td>
+								</t>  
+								
+                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                            
+                            </tr>
+                        </t>
+                        <t t-if='!line.selected'>
+                            <tr class='paymentline' t-att-data-cid='line.cid'>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                                <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
+                                <td class='col-change'> 
+                                    <t t-if='order.get_change(line)'>
+                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                     </t>
+                                </td>
+                                
+                                <td class='col-name'> <t t-esc='line.name' /> </td>
+								<t t-if="line.cashregister.journal.payment_type == 'cash'">
+	                               	<td></td>
+								</t>
+								<t t-if="line.cashregister.journal.payment_type == 'credit'">
+	                               	<td  t-att-data-cid='line.cid'> <i class='fa fa-credit-card' /> <t t-esc='line.creditnumber'/></td>
+								</t>
+								<t t-if="line.cashregister.journal.payment_type == 'debit'">
+	                               	<td  t-att-data-cid='line.cid'> <i class='fa fa-credit-card-alt' /> <t t-esc='line.debitnumber'/></td>
+								</t>
+								<t t-if="line.cashregister.journal.payment_type == 'coupon'">
+	                               	<td  t-att-data-cid='line.cid'> <i class='fa fa-tags' /> <t t-esc='line.couponnumber'/></td>
+								</t>
+								<t t-if="line.cashregister.journal.payment_type == 'deposit'">
+	                               	<td  t-att-data-cid='line.cid'> <i class='fa fa-bank' /> <t t-esc='line.depositnumber'/></td>
+								</t>
+								
+                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                            </tr>
+                        </t>
+                    </t>
+                    <t t-if='extradue'>
+                        <tr class='paymentline extra' t-att-data-cid='0'>
+                            <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(extradue)' /> </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>   		    		   
+   		</t>
+    </t>
+    
+</templates>
